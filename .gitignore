@@ -28,7 +28,7 @@
 \#*
 output/*
 stage/*
-build
+build/*
 !build/*.bat
 binary/*/
 binary/*
