@@ -14,7 +14,7 @@ class stRead:public FnPtr {
 public:
     stRead(unsigned char* buf, int len) {
         buf_ = new unsigned char[len];
-		memcpy(buf_, buf, len);
+        memcpy(buf_, buf, len);
         len_ = len;
     }
     virtual void run() {
@@ -57,14 +57,11 @@ int uninit(pa_context* ctx)
 
 int send(pa_context* ctx) {
 	int len = 0;
-	BYTE* data = NULL;
-	BYTE key[8];
-	if (gp.is_buffer_data(ctx,0))
+	const char* data = NULL;
+	if (gp.is_buffer_data(ctx,0) && gp.is_number(ctx,1))
 	{
-		data = (BYTE*)gp.get_buffer_data(ctx, 0, &len);
-		p.write(data, key);
-		void *ptr=gp.push_fixed_buffer(ctx,8);
-		memcpy(ptr, key, 8);
+		data = (const char*)gp.get_buffer_data(ctx, 0, &len);
+		gp.push_int(ctx, p.write(data, len, gp.get_int(ctx, 1)));
 	}
 	return 1;
 }

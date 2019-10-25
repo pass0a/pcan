@@ -10,6 +10,7 @@ console.log(pcan.init(0x001C, 0x01,0x100,3,function(ev,data){
 }));
 pcan.send(tmp);
 pcan.send(tmp);
+console.log("!!!!");
 sleep(5000);
 pcan.uninit();
 // pcan.uninit();

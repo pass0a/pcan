@@ -17,6 +17,6 @@ int passoa_init(pa_plugin p) {
 	return 0;
 }
 int passoa_exit() {
-    __uninit();
+    
 	return 0;
 }
