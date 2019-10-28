@@ -12,7 +12,7 @@ variables:
 steps:
 - script: |
    cd build
-   cmake ../ -G "Visual Studio 15 2017" -DCMAKE_INSTALL_PREFIX=../output/msvc
+   cmake ../generate -G "Visual Studio 15 2017" -DCMAKE_INSTALL_PREFIX=../output/msvc
    cmake --build ./ --target install --config Release
    
   displayName: 'build c++ addon'
