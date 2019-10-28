@@ -20,17 +20,9 @@ target_link_libraries(pcan
              )
 set(CMAKE_SHARED_LIBRARY_SUFFIX ".passoa")
 install(TARGETS pcan
-	RUNTIME DESTINATION ./node_modules)
-install(DIRECTORY ${PROJECT_SOURCE_DIR}/test/ DESTINATION test
-        FILES_MATCHING
-		PATTERN "node_modules" EXCLUDE
-		PATTERN "addon" EXCLUDE
-		PATTERN "build/*" EXCLUDE
-		PATTERN "package-lock.json" EXCLUDE
-		PATTERN "*.js"
-		PATTERN "*.bat"
-		PATTERN "*.json"
-		PATTERN ".babelrc")
+	RUNTIME DESTINATION ./node_modules/pcan)
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/modules/ DESTINATION node_modules/pcan)
+install(FILES ${PROJECT_SOURCE_DIR}/lib/PCANBasic.dll DESTINATION node_modules/pcan)
 else()
 
 endif()

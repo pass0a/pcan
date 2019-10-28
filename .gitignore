@@ -40,5 +40,5 @@ binary/*
 GTAGS
 GPATH
 GRTAGS
-lib
+!lib/*
 dist

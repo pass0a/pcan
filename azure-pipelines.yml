@@ -1,0 +1,44 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+pool:
+  name: Hosted VS2017
+  
+variables:
+  RepoName: dbcc
+
+- script: |
+   cd build
+   cmake ../ -G "Visual Studio 15 2017" -DCMAKE_INSTALL_PREFIX=../output/msvc
+   cmake --build ./ --target install --config Release
+   
+  displayName: 'build c++ addon'
+
+- task: ArchiveFiles@2
+  displayName: 'Archive output/msvc'
+  inputs:
+    rootFolderOrFile: output/msvc
+    includeRootFolder: false
+    archiveType: tar
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(RepoName)-msvc-$(Build.SourceBranchName).tar.gz'
+
+- task: GitHubRelease@0
+  inputs:
+    gitHubConnection: 'ga-connect'
+    repositoryName: '$(Build.Repository.Name)'
+    action: 'create'
+    target: '$(Build.SourceVersion)'
+    tagSource: 'auto'
+    releaseNotesFile: 'ChangeLog'
+    addChangeLog: false
+  condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
+
+- task: CopyFilesOverSSH@0
+  inputs:
+    sshEndpoint: 'ssh'
+    sourceFolder: '$(Build.ArtifactStagingDirectory)'
+    contents: '**'
+    targetFolder: '/root/public/npm'
+  condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
