@@ -7,7 +7,7 @@ trigger:
   branches:
     include:
     - master
-    - ref/tags/v*
+    - refs/tags/v*
 pr:
 - master
 
