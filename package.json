@@ -1,9 +1,9 @@
 {
 	"name": "@passoa/pcan",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"description": "",
 	"main": "dist/index.js",
-	"types": "dist/src/index.d.ts",
+	"types": "dist/index.d.ts",
 	"files": [ "/dist/*.js", "/dist/*.d.ts", "/binding", "/src" ],
 	"scripts": {
 		"install": "cxb -i",
