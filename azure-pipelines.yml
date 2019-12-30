@@ -2,52 +2,72 @@
 # Start with a minimal pipeline that you can customize to build and deploy your code.
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
+
 trigger:
   batch: true
   branches:
     include:
     - master
     - refs/tags/v*
+    - dev
 pr:
 - master
 
+
 pool:
   name: Hosted VS2017
-  
-variables:
-  RepoName: pcan
 
 steps:
+
 - script: |
-   cd build
-   cmake ../generate -G "Visual Studio 15 2017" -DCMAKE_INSTALL_PREFIX=../output/msvc
-   cmake --build ./ --target install --config Release
-   
-  displayName: 'build c++ addon'
+    npm install
+  displayName: 'install npm submodules'
+
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      npm run windows_x86
+      rm dist/*.ilk
+      mv dist/pcan.pdb binary/pcan.pdb
+      ls dist
+  displayName: 'build windows_x86'
+
+- task: cURLUploader@2
+  displayName: 'Upload pdb'
+  inputs:
+    files: 'binary/pcan.pdb'
+    serviceEndpoint: 'csding.net'
+    remotePath: 'repertory/cxb/pcan.pdb?version=$(Build.SourceBranchName)-windows-x86'
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
 
 - task: ArchiveFiles@2
-  displayName: 'Archive output/msvc'
+  displayName: 'Archive dist'
   inputs:
-    rootFolderOrFile: output/msvc
+    rootFolderOrFile: dist
     includeRootFolder: false
     archiveType: tar
-    archiveFile: '$(Build.ArtifactStagingDirectory)/$(RepoName)-msvc-$(Build.SourceBranchName).tar.gz'
+    archiveFile: 'pcan.tar.gz'
 
-- task: GitHubRelease@0
+- task: cURLUploader@2
+  displayName: 'Upload pcan.passoa'
   inputs:
-    gitHubConnection: 'ga-connect'
-    repositoryName: '$(Build.Repository.Name)'
-    action: 'create'
-    target: '$(Build.SourceVersion)'
-    tagSource: 'auto'
-    releaseNotesFile: 'ChangeLog'
-    addChangeLog: false
-  condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
-
-- task: CopyFilesOverSSH@0
+    files: 'pcan.tar.gz'
+    serviceEndpoint: 'csding.net'
+    remotePath: 'repertory/cxb/pcan.tar.gz?version=$(Build.SourceBranchName)-windows-x86'
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
+  
+- task: Npm@1
   inputs:
-    sshEndpoint: 'ssh'
-    sourceFolder: '$(Build.ArtifactStagingDirectory)'
-    contents: '**'
-    targetFolder: '/root/public/npm'
-  condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
+    command: 'custom'
+    workingDir: './'
+    customCommand: 'run build'
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
+  
+- task: Npm@1
+  inputs:
+    command: 'publish'
+    workingDir: './'
+    customRegistry: 'useFeed'
+    publishEndpoint: 'npmjs.org'
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
