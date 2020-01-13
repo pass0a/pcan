@@ -1,6 +1,6 @@
 {
 	"name": "@passoa/pcan",
-	"version": "1.0.3",
+	"version": "1.0.4",
 	"description": "",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
@@ -39,12 +39,12 @@
 			"module_name": "pcan",
 			"module_path": "dist/",
 			"remote_path": "repertory/cxb/",
-			"package_name": "{module_name}.tar.gz?version=v1.0.1-{platform}-{arch}",
+			"package_name": "{module_name}.tar.gz?version=v1.0.2-{platform}-{arch}",
 			"host": "https://passoa-generic.pkg.coding.net"
 		},
 		"external": {},
 		"build_cmd": {
-			"windows_x86": [ "-DAPP=1" ]
+			"windows_x86": [ "-A", "win32" ]
 		}
 	}
 }
