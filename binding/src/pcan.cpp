@@ -96,8 +96,8 @@ void Pcan::msgthread(PCAN_CALLBACK cb)
             newMsg = TPCANMsgFD();
             newMsg.ID = CANMsg.ID;
             newMsg.DLC = CANMsg.LEN;
-            int Len = CANMsg.LEN > 8 ? 8 : CANMsg.LEN;
-            for (int i = 0; i < Len; i++)
+            //int Len = CANMsg.LEN > 8 ? 8 : CANMsg.LEN;
+            for (int i = 0; i < newMsg.DLC; i++)
                 newMsg.DATA[i] = CANMsg.DATA[i];
             newMsg.MSGTYPE = CANMsg.MSGTYPE;
             cb(newMsg.ID, newMsg.MSGTYPE, newMsg.DATA, newMsg.DLC);

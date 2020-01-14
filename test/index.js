@@ -1,16 +1,27 @@
-var pcan = require("pcan.passoa");
-var tmp=new Buffer([0x10,0xAA,0x11,0x21,0xA3,0x2F]);
-console.log(pcan.init(0x001C, 0x01,0x100,3,function(ev,data){
-    console.log(ev,data);
-    console.log(data[0]);
-    console.log(data[1]);
-    console.log(data[2]);
-    console.log(data[3]);
-    console.log(data[4]);
-}));
-pcan.send(tmp);
-pcan.send(tmp);
-console.log("!!!!");
-sleep(5000);
-pcan.uninit();
+var pcan = require('../');
+var tmp = new Buffer([ 0x10, 0xaa, 0x11, 0x21, 0xa3, 0x2f ]);
+var config = {
+	baudrate: 0x432f,
+	hardware_type: 0x01,
+	io_port: 0x100,
+	interrupt: 3
+};
+console.log(
+	pcan.initPcan(config, function(ev, id, type, data) {
+		console.log(ev, id, type, data);
+		console.log(data[0]);
+		console.log(data[1]);
+		console.log(data[2]);
+		console.log(data[3]);
+		console.log(data[4]);
+	})
+);
+// pcan.send(tmp);
+// pcan.send(tmp);
+console.log('!!!!');
+setTimeout(function() {
+	console.log('exit');
+	pcan.uninitPcan();
+}, 2000);
+
 // pcan.uninit();

@@ -73,13 +73,13 @@ int send(pa_context* ctx) {
 void onReaded(int id, int type, const void* buf, int len) {
     gp.eval_string(ctx_, "(passoa_callbacks.call.bind(passoa_callbacks))");
     gp.push_int(ctx_, ref_);
-    gp.push_int(ctx_, id);
-    gp.push_int(ctx_, type);
     gp.push_string(ctx_, "data");
+	gp.push_int(ctx_, id);
+	gp.push_int(ctx_, type);
     gp.push_external_buffer(ctx_, (void*)buf, len);
     //gp.config_buffer(ctx_, -1, );
-    gp.push_int(ctx_, len);
-    gp.call(ctx_, 4);
+    //gp.push_int(ctx_, len);
+    gp.call(ctx_, 5);
     gp.pop(ctx_);
 }
 

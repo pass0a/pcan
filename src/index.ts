@@ -12,6 +12,7 @@ interface PcanInfo {
 	interrupt: number;
 }
 export function initPcan(info: PcanInfo, cb: (id: number, type: number, ev: string, data: Buffer) => void) {
+	console.log(info);
 	return pcan.init(info.baudrate, info.hardware_type, info.io_port, info.interrupt, cb);
 }
 export function uninitPcan() {
