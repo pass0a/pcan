@@ -2,14 +2,15 @@
 	"name": "@passoa/pcan",
 	"version": "1.0.4",
 	"description": "",
-	"main": "dist/index.js",
-	"types": "dist/index.d.ts",
-	"files": [ "/dist/*.js", "/dist/*.d.ts", "/binding", "/src" ],
+	"main": "lib/index.js",
+	"types": "lib/index.d.ts",
+	"files": [ "/lib/*.js", "/lib/*.d.ts" ],
 	"scripts": {
 		"install": "cxb -i",
-		"windows_x86": "cross-env build_type=RelWithDebInfo platform=windows arch=x86 cxb -b",
-		"build": "rimraf dist && cross-env opt=build webpack",
-		"dev": "cross-env opt=dev webpack",
+		"vc14_x64": "cross-env build_type=RelWithDebInfo platform=vc14 cxb -b",
+		"windows_x64": "cross-env build_type=RelWithDebInfo cxb -b",
+		"build": "rimraf lib && tsc -p src",
+		"dev": "cross-env tsc -w -p src",
 		"test": "node test/test.js",
 		"pretest": "npm run build"
 	},
@@ -17,34 +18,15 @@
 	"license": "ISC",
 	"dependencies": {},
 	"devDependencies": {
-		"@babel/core": "^7.5.5",
-		"@babel/preset-env": "^7.5.5",
 		"@passoa/tap": "^1.0.4",
 		"@types/mkdirp": "^0.5.2",
 		"@types/node": "^12.6.8",
 		"@types/tape": "^4.2.33",
-		"babel-loader": "^8.0.6",
 		"cross-env": "^5.2.0",
 		"fs-extra": "^8.1.0",
 		"rimraf": "^2.6.3",
-		"ts-loader": "^6.0.4",
 		"typescript": "^3.5.3",
-		"webpack": "^4.36.1",
-		"webpack-bundle-analyzer": "^3.3.2",
-		"webpack-cli": "^3.3.6",
-		"@passoa/cxb": "latest"
-	},
-	"cxb": {
-		"binary": {
-			"module_name": "pcan",
-			"module_path": "dist/",
-			"remote_path": "repertory/cxb/",
-			"package_name": "{module_name}.tar.gz?version=v1.0.2-{platform}-{arch}",
-			"host": "https://passoa-generic.pkg.coding.net"
-		},
-		"external": {},
-		"build_cmd": {
-			"windows_x86": [ "-A", "win32" ]
-		}
+		"node-addon-api": "^2.0.0",
+		"@passoa/cxb": "^1.0.17"
 	}
 }

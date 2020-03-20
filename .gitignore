@@ -32,7 +32,7 @@ debug
 release
 output
 stage
-build/
+build*
 doc/_build/
 binary/
 !.gitignore
@@ -47,6 +47,7 @@ GTAGS
 GPATH
 GRTAGS
 dist
+lib
 Debug
 Release
 3rd

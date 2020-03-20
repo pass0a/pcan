@@ -3,7 +3,7 @@ if ('win32' == process.platform) {
 } else {
 	process.env.Path = process.env.Path;
 }
-var pcan = require('./pcan.passoa');
+var pcan = require('./pcan.node');
 
 interface PcanInfo {
 	baudrate: number;
@@ -11,12 +11,12 @@ interface PcanInfo {
 	io_port: number;
 	interrupt: number;
 }
-export function initPcan(info: PcanInfo, cb: (id: number, type: number, ev: string, data: Buffer) => void) {
+export function open(info: PcanInfo, cb: (id: number, type: number, ev: Buffer, dlc: number) => void) {
 	console.log(info);
-	return pcan.init(info.baudrate, info.hardware_type, info.io_port, info.interrupt, cb);
+	return pcan.open(info, cb);
 }
-export function uninitPcan() {
-	return pcan.uninit();
+export function close() {
+	return pcan.close();
 }
 export function send(data: Buffer, id: number) {
 	return pcan.send(data, id);
