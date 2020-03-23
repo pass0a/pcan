@@ -27,24 +27,24 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      npm run windows_x86
-      rm dist/*.ilk
-      mv dist/pcan.pdb binary/pcan.pdb
-      ls dist
-  displayName: 'build windows_x86'
+      npm run windows_x64
+      rm lib/*.ilk
+      mv lib/pcan.pdb binary/pcan.pdb
+      ls lib
+  displayName: 'build windows_x64'
 
 - task: cURLUploader@2
   displayName: 'Upload pdb'
   inputs:
     files: 'binary/pcan.pdb'
     serviceEndpoint: 'csding.net'
-    remotePath: 'repertory/cxb/pcan.pdb?version=$(Build.SourceBranchName)-windows-x86'
+    remotePath: 'repertory/cxb/pcan.pdb?version=$(Build.SourceBranchName)-windows-x64'
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
 
 - task: ArchiveFiles@2
-  displayName: 'Archive dist'
+  displayName: 'Archive lib'
   inputs:
-    rootFolderOrFile: dist
+    rootFolderOrFile: lib
     includeRootFolder: false
     archiveType: tar
     archiveFile: 'pcan.tar.gz'
@@ -54,7 +54,7 @@ steps:
   inputs:
     files: 'pcan.tar.gz'
     serviceEndpoint: 'csding.net'
-    remotePath: 'repertory/cxb/pcan.tar.gz?version=$(Build.SourceBranchName)-windows-x86'
+    remotePath: 'repertory/cxb/pcan.tar.gz?version=$(Build.SourceBranchName)-windows-x64'
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
   
 - task: Npm@1

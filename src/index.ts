@@ -11,13 +11,18 @@ interface PcanInfo {
 	io_port: number;
 	interrupt: number;
 }
-export function open(info: PcanInfo, cb: (id: number, type: number, ev: Buffer, dlc: number) => void) {
-	console.log(info);
+interface PCANMsg {
+	id: number;
+	type: number;
+	msg: Buffer;
+	dlc: number;
+}
+export function open(info: PcanInfo, cb: (msg: PCANMsg) => void) {
 	return pcan.open(info, cb);
 }
 export function close() {
 	return pcan.close();
 }
-export function send(data: Buffer, id: number) {
-	return pcan.send(data, id);
+export function send(msg: PCANMsg) {
+	return pcan.send(msg);
 }

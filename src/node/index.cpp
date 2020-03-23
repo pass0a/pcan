@@ -17,26 +17,38 @@ public:
     void Execute(const ExecutionProgress& progress) {
         // Need to simulate cpu heavy task
         TPCANMsg msg;
-        while (!needClose)
+        while (!needClose || err != PCAN_ERROR_QRCVEMPTY)
         {
             err = gp.read(msg);
-            if (err)std::this_thread::sleep_for(std::chrono::seconds(20));
-            progress.Send(&msg, 1);
+            if (err) {
+                std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            }
+            else {
+                progress.Send(&msg, 1);
+            }
         }
-        printf("Error:%d", err);
-        /*for (uint32_t i = 0; i < 2; ++i) {
-            std::this_thread::sleep_for(std::chrono::seconds(1));
-        }*/
     }
 
     void OnOK() {
         HandleScope scope(Env());
-        Callback().Call({ Env().Null(), String::New(Env(), "over") });
+        if (err != PCAN_ERROR_QRCVEMPTY) {
+            char msg[100];
+            sprintf(msg, "PCAN Error:%d", err);
+            TypeError::New(Env(), msg).ThrowAsJavaScriptException();
+        }
     }
 
-    void OnProgress(const TPCANMsg* msg, size_t /* count */) {
-        HandleScope scope(Env());
-        Callback().Call({ Number::New(Env(), msg->ID) });
+    void OnProgress(const TPCANMsg* msg, size_t  count) {
+        if (msg && count) {
+            if (count > 1) { printf("has more!!!!"); }
+            HandleScope scope(Env());
+            auto obj = Object::New(Env());
+            obj.Set("id", Number::New(Env(), msg->ID));
+            obj.Set("type", Number::New(Env(), msg->MSGTYPE));
+            obj.Set("data", Buffer<BYTE>::New(Env(), const_cast<BYTE*>(msg->DATA), 8));
+            obj.Set("dlc", Number::New(Env(), msg->LEN));
+            Callback().Call({ obj });
+        }
     }
     void close() {
         needClose = true;
@@ -82,7 +94,18 @@ Value pcan_send(const CallbackInfo& info) {
     if (info[0].IsObject()) {
         auto obj = info[0].ToObject();
         TPCANMsg msg;
-        if (wk)wk->send(msg);
+        auto data = obj.Get("data").As<Buffer<BYTE>>();
+        if (data.Length() - data.ByteOffset() < 7) {
+            Napi::Error::New(info.Env(), "msg.data length less 8 bytes").ThrowAsJavaScriptException();
+        }
+        if (!wk) {
+            Napi::Error::New(info.Env(), "pcan has not initialized").ThrowAsJavaScriptException();
+        }
+        memcpy(msg.DATA, data.Data(), 8);
+        msg.ID = getNumber(obj, "id", 0);
+        msg.MSGTYPE = getNumber(obj, "type", 0);
+        msg.LEN = getNumber(obj, "dlc", 8);
+        wk->send(msg);
     }
     return Number::New(info.Env(), 0);
 }
