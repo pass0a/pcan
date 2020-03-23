@@ -51,4 +51,5 @@ lib
 Debug
 Release
 3rd
-src.
+*.lock
+*lock.json

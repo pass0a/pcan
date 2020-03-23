@@ -27,6 +27,6 @@
 		"rimraf": "^2.6.3",
 		"typescript": "^3.5.3",
 		"node-addon-api": "^2.0.0",
-		"@passoa/cxb": "^1.0.17"
+		"@passoa/cxb": "^1.0.18"
 	}
 }

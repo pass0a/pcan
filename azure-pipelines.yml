@@ -19,8 +19,10 @@ pool:
 
 steps:
 
-- script: |
-    npm install
+- task: Npm@1
+  inputs:
+    command: 'install'
+    workingDir: './'
   displayName: 'install npm submodules'
 
 - task: PowerShell@2
@@ -28,10 +30,12 @@ steps:
     targetType: 'inline'
     script: |
       npm run windows_x64
+      ls 3rd/pcan/
+      ls 3rd/pcan/x64/VC_LIB
       rm lib/*.ilk
       mv lib/pcan.pdb binary/pcan.pdb
       ls lib
-  displayName: 'build windows_x64'
+  displayName: 'clean windows_x64'
 
 - task: cURLUploader@2
   displayName: 'Upload pdb'
