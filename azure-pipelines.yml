@@ -30,20 +30,10 @@ steps:
     targetType: 'inline'
     script: |
       npm run windows_x64
-      ls 3rd/pcan/
-      ls 3rd/pcan/x64/VC_LIB
       rm lib/*.ilk
-      mv lib/pcan.pdb binary/pcan.pdb
+      rm lib/*.pdb
       ls lib
   displayName: 'clean windows_x64'
-
-- task: cURLUploader@2
-  displayName: 'Upload pdb'
-  inputs:
-    files: 'binary/pcan.pdb'
-    serviceEndpoint: 'csding.net'
-    remotePath: 'repertory/cxb/pcan.pdb?version=$(Build.SourceBranchName)-windows-x64'
-  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
 
 - task: ArchiveFiles@2
   displayName: 'Archive lib'

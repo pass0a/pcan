@@ -11,22 +11,23 @@
 		"windows_x64": "cross-env build_type=RelWithDebInfo cxb -b",
 		"build": "rimraf lib && tsc -p src",
 		"dev": "cross-env tsc -w -p src",
-		"test": "node test/test.js",
-		"pretest": "npm run build"
+		"patch": "standard-version -r patch",
+		"minor": "standard-version -r minor",
+		"major": "standard-version -r major"
 	},
 	"author": "",
 	"license": "ISC",
 	"dependencies": {},
 	"devDependencies": {
 		"@passoa/tap": "^1.0.4",
-		"@types/mkdirp": "^0.5.2",
 		"@types/node": "^12.6.8",
 		"@types/tape": "^4.2.33",
 		"cross-env": "^5.2.0",
 		"fs-extra": "^8.1.0",
 		"rimraf": "^2.6.3",
 		"typescript": "^3.5.3",
+		"standard-version": "^7.1.0",
 		"node-addon-api": "^2.0.0",
-		"@passoa/cxb": "^1.0.18"
+		"@passoa/cxb": "^1.0.19"
 	}
 }
