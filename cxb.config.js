@@ -1,7 +1,7 @@
 module.exports = (opts) => {
-	let module_name = opts.module_name;
+	let module_name = 'pcan';
 	let config = {
-		module_name: 'pcan',
+		module_name: module_name,
 		module_path: 'build',
 		remote_path: 'repertory/cxb/',
 		package_name: `${module_name}.tar.gz?version=v${opts.version}-${opts.platform}-${opts.arch}`,
