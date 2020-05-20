@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.6](https://github.com/pass0a/pcan/compare/v1.0.5...v1.0.6) (2020-05-20)
+
+
+### Bug Fixes
+
+* 修正azurepipelines上传，修正二进制文件存放路径 ([17009e3](https://github.com/pass0a/pcan/commit/17009e354a830af3b6bcbec6bba8db6aa12ee498))
+
 ### [1.0.5](https://github.com/pass0a/pcan/compare/v1.0.2...v1.0.5) (2020-03-23)
 
 
