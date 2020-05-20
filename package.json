@@ -6,7 +6,8 @@
 	"types": "lib/index.d.ts",
 	"files": [
 		"/lib/*.js",
-		"/lib/*.d.ts"
+		"/lib/*.d.ts",
+		"/cxb.config.js"
 	],
 	"scripts": {
 		"install": "cxb -i",
@@ -20,7 +21,9 @@
 	},
 	"author": "",
 	"license": "ISC",
-	"dependencies": {},
+	"dependencies": {
+		"bindings": "^1.5.0"
+	},
 	"devDependencies": {
 		"@passoa/tap": "^1.0.4",
 		"@types/node": "^12.6.8",
@@ -31,6 +34,6 @@
 		"typescript": "^3.5.3",
 		"standard-version": "^7.1.0",
 		"node-addon-api": "^2.0.0",
-		"@passoa/cxb": "^1.0.19"
+		"@passoa/cxb": "^1.0.24"
 	}
 }

@@ -30,25 +30,24 @@ steps:
     targetType: 'inline'
     script: |
       npm run windows_x64
-      rm lib/*.ilk
-      rm lib/*.pdb
-      ls lib
+      rm build/*.ilk
+      rm build/*.pdb
+      ls build
   displayName: 'clean windows_x64'
 
 - task: ArchiveFiles@2
-  displayName: 'Archive lib'
+  displayName: 'Archive build'
   inputs:
-    rootFolderOrFile: lib
-    includeRootFolder: false
+    rootFolderOrFile: build
+    includeRootFolder: true
     archiveType: tar
-    archiveFile: 'pcan.tar.gz'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/pcan.tar.gz'
 
-- task: cURLUploader@2
-  displayName: 'Upload pcan.passoa'
+- task: GitHubRelease@0
+  displayName: "GitHub release (create)"
   inputs:
-    files: 'pcan.tar.gz'
-    serviceEndpoint: 'csding.net'
-    remotePath: 'repertory/cxb/pcan.tar.gz?version=$(Build.SourceBranchName)-windows-x64'
+    gitHubConnection: "ga-connect"
+    addChangeLog: false
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
   
 - task: Npm@1
@@ -64,4 +63,13 @@ steps:
     workingDir: './'
     customRegistry: 'useFeed'
     publishEndpoint: 'npmjs.org'
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
+
+- script: |
+    echo %CVIPUSER%
+    curl -u %CVIPUSER%:%CVIPPASS% -H "Accept: application/json" -H "Content-type: application/json" -X POST -d "{'action': 'published'}" https://passoa.coding.net/api/cci/job/244432/trigger
+  displayName: 'Command Line Script'
+  env:
+    CVIPUSER: ptos650d93zh
+    CVIPPASS: 09760a524a3a1acf77cd85a953202d2f15383ffd
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))

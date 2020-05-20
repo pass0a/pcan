@@ -1,9 +1,4 @@
-if ('win32' == process.platform) {
-	process.env.Path = process.env.Path + ';' + __dirname;
-} else {
-	process.env.Path = process.env.Path;
-}
-var pcan = require('./pcan.node');
+var pcan = require('bindings')('pcan');
 
 interface PcanInfo {
 	baudrate: number;
