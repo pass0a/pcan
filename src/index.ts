@@ -8,9 +8,9 @@ interface PcanInfo {
 }
 interface PCANMsg {
 	id: number;
-	type: number;
-	msg: Buffer;
-	dlc: number;
+	type?: number;
+	data: Buffer;
+	dlc?: number;
 }
 export function open(info: PcanInfo, cb: (msg: PCANMsg) => void) {
 	return pcan.open(info, cb);

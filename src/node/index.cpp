@@ -93,19 +93,24 @@ Value pcan_send(const CallbackInfo& info) {
     // We need to validate the arguments here
     if (info[0].IsObject()) {
         auto obj = info[0].ToObject();
-        TPCANMsg msg;
-        auto data = obj.Get("data").As<Buffer<BYTE>>();
-        if (data.Length() - data.ByteOffset() < 7) {
-            Napi::Error::New(info.Env(), "msg.data length less 8 bytes").ThrowAsJavaScriptException();
+        if (obj.Has("id") && obj.Has("data")) {
+            TPCANMsg msg;
+            auto data = obj.Get("data").As<Buffer<BYTE>>();
+            if (data.Length() - data.ByteOffset() < 7) {
+                Napi::Error::New(info.Env(), "msg.data length less 8 bytes").ThrowAsJavaScriptException();
+            }
+            if (!wk) {
+                Napi::Error::New(info.Env(), "pcan has not initialized").ThrowAsJavaScriptException();
+            }
+            memcpy(msg.DATA, data.Data(), 8);
+            msg.ID = getNumber(obj, "id", 0);
+            msg.MSGTYPE = getNumber(obj, "type", 0);
+            msg.LEN = getNumber(obj, "dlc", 8);
+            wk->send(msg);
         }
-        if (!wk) {
-            Napi::Error::New(info.Env(), "pcan has not initialized").ThrowAsJavaScriptException();
+        else {
+            Napi::Error::New(info.Env(), "pcan_send must has id and data").ThrowAsJavaScriptException();
         }
-        memcpy(msg.DATA, data.Data(), 8);
-        msg.ID = getNumber(obj, "id", 0);
-        msg.MSGTYPE = getNumber(obj, "type", 0);
-        msg.LEN = getNumber(obj, "dlc", 8);
-        wk->send(msg);
     }
     return Number::New(info.Env(), 0);
 }
