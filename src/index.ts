@@ -1,23 +1,43 @@
-var pcan = require('bindings')('pcan');
+import { Duplex } from 'stream';
 
-interface PcanInfo {
+var bindings = require('bindings')('pcan');
+
+export interface PcanInfo {
 	baudrate: number;
 	hardware_type: number;
 	io_port: number;
 	interrupt: number;
 }
-interface PCANMsg {
+export interface PCANMsg {
 	id: number;
 	type?: number;
 	data: Buffer;
 	dlc?: number;
 }
-export function open(info: PcanInfo, cb: (msg: PCANMsg) => void) {
-	return pcan.open(info, cb);
-}
-export function close() {
-	return pcan.close();
-}
-export function send(msg: PCANMsg) {
-	return pcan.send(msg);
+export class Pcan extends Duplex {
+	private inst: any = null;
+	constructor(info: PcanInfo) {
+		super({ objectMode: true });
+		this.inst = bindings.open(info, (data: any) => {
+			this.push(data);
+		});
+	}
+	_read(size: number) {
+		if (this.inst) {
+			bindings.read(this.inst);
+		} else {
+			this.push(null);
+		}
+	}
+	_destroy() {
+		bindings.close(this.inst);
+	}
+	_final() {}
+	_write(chunk: any, encoding: string, next: () => void) {
+		bindings.write(this.inst, chunk);
+		next();
+	}
+	isOpened() {
+		return this.inst ? true : false;
+	}
 }

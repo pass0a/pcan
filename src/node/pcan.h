@@ -2,16 +2,13 @@
 #define __PCAN_HEADER_PCAN_H__
 #include <Windows.h>
 #include "PCANBasic.h"
+#include <napi.h>
+using namespace Napi;
 
-class Pcan {
-public:
-    int open(int baudrate, int hwtype, int selectedio, int selectedinterrupt);
-    TPCANStatus Pcan::close();
-    TPCANStatus Pcan::write(TPCANMsg& CANMsg);
-    TPCANStatus Pcan::read(TPCANMsg& CANMsg);
-private:
-    void set_equipment();
-    TPCANHandle m_HandlesArray[59];
-    TPCANHandle m_PcanHandle;
-};
+Value _pcanOpen(const Napi::CallbackInfo& info);
+Value _pcanClose(const Napi::CallbackInfo& info);
+Value _pcanIsOpened(const Napi::CallbackInfo& info);
+Value _pcanRead(const Napi::CallbackInfo& info);
+Value _pcanWrite(const Napi::CallbackInfo& info);
+
 #endif // !__PCAN_HEADER_PCAN_H__
