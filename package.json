@@ -33,7 +33,7 @@
 		"fs-extra": "^8.1.0",
 		"rimraf": "^2.6.3",
 		"typescript": "^3.5.3",
-		"standard-version": "^7.1.0",
+		"standard-version": "^8.0.1",
 		"node-addon-api": "^2.0.0",
 		"@passoa/cxb": "^1.0.24"
 	}
