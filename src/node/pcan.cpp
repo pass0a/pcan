@@ -253,9 +253,9 @@ Value _pcanWrite(const Napi::CallbackInfo& info) {
             if (obj.Has("id") && obj.Has("data")) {
                 TPCANMsg msg;
                 auto data = obj.Get("data").As<Buffer<BYTE>>();
-                if (data.Length() - data.ByteOffset() < 7) {
+                /*if (data.Length() - data.ByteOffset() < 7) {
                     Napi::Error::New(info.Env(), "msg.data length less 8 bytes").ThrowAsJavaScriptException();
-                }
+                }*/
                 memcpy(msg.DATA, data.Data(), 8);
                 msg.ID = getNumber(obj, "id", 0);
                 msg.MSGTYPE = getNumber(obj, "type", 0);
